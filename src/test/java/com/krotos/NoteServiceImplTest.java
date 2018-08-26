@@ -1,22 +1,26 @@
 package com.krotos;
 
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
+import org.mockito.Answers;
+import org.mockito.stubbing.Answer;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 
 class NoteServiceImplTest {
     private INoteService noteService;
     double delta=0.005;
-    private INoteStorage noteStorage;
+    private INoteStorage storage;
     Multimap<String,Note> notes;
 
-    //to samo co w NoteStorageMock.class
+    //to samo co w NoteStorageMock.class (drugi mock)
     private INoteStorage createMockStorage(){
         INoteStorage noteStorage=mock(INoteStorage.class);
 
@@ -26,12 +30,25 @@ class NoteServiceImplTest {
             return null;
         }).when(noteStorage).add(any(Note.class));
 
+        doAnswer((Answer<Void>) i->{
+            notes.clear();
+            return null;
+        }).when(noteStorage).clear();
+
+        doAnswer(i->{
+            String name=i.getArgument(0);
+            return notes.get(name);
+        }).when(noteStorage).getAllNotesOf(any(String.class));
+
         return noteStorage;
     }
 
     @BeforeEach
     public void before() {
        // noteService = NoteServiceImpl.createWith(new NoteStorageMock());
+        storage=createMockStorage();
+        noteService=NoteServiceImpl.createWith(storage);
+        notes=ArrayListMultimap.create();
     }
 
     @Test
