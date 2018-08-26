@@ -1,6 +1,7 @@
 package com.krotos;
 
 public class Note {
+    //klasa trudna do przetestowania
     private String name;
     private double grade;
 

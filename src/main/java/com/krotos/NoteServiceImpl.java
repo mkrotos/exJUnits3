@@ -3,6 +3,7 @@ package com.krotos;
 import java.util.Collection;
 
 public class NoteServiceImpl implements INoteService {
+    //nowa klasa na wzorcu fasady do testowania
     private final INoteStorage iNoteStorage;
 
     public static INoteService createWith(INoteStorage iNoteStorage) {
