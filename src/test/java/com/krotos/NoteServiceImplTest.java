@@ -27,7 +27,7 @@ class NoteServiceImplTest {
 
     @Test
     public void avgOfNull() {
-        assertThrows(IllegalArgumentException.class, () -> noteService.avgOf(null));
+        assertEquals(0,noteService.avgOf(null),delta);
     }
     @Test
     public void avgOfNonExisting(){

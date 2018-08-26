@@ -15,6 +15,9 @@ public class NoteServiceImpl implements INoteService {
 
     @Override
     public void add(Note note) {
+        if (note == null) {
+            throw new IllegalArgumentException();
+        }
         iNoteStorage.add(note);
     }
 
@@ -22,10 +25,15 @@ public class NoteServiceImpl implements INoteService {
     public double avgOf(String name) {
         double sum = 0.0;
         final Collection<Note> notes = iNoteStorage.getAllNotesOf(name);
-        for (Note note : notes) {
-            sum += note.getGrade();
+        if (notes != null && !notes.isEmpty()) {
+            for (Note note : notes) {
+                sum += note.getGrade();
+            }
+            return sum / notes.size();
+        } else {
+            return 0;
         }
-        return sum / notes.size();
+
     }
 
     @Override
