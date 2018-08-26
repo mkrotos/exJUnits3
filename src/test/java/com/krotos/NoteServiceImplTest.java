@@ -1,18 +1,37 @@
 package com.krotos;
 
+import com.google.common.collect.Multimap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
 
 class NoteServiceImplTest {
     private INoteService noteService;
     double delta=0.005;
+    private INoteStorage noteStorage;
+    Multimap<String,Note> notes;
+
+    //to samo co w NoteStorageMock.class
+    private INoteStorage createMockStorage(){
+        INoteStorage noteStorage=mock(INoteStorage.class);
+
+        doAnswer(invocation -> {
+            Note note=(Note) invocation.getArgument(0);
+            notes.put(note.getName(),note);
+            return null;
+        }).when(noteStorage).add(any(Note.class));
+
+        return noteStorage;
+    }
 
     @BeforeEach
     public void before() {
-        noteService = NoteServiceImpl.createWith(new NoteStorageMock());
+       // noteService = NoteServiceImpl.createWith(new NoteStorageMock());
     }
 
     @Test
